@@ -14,7 +14,7 @@ body{
 .tools{
     width: 100%;
     background-color: lightgray;
-    height: 80px;
+    height: 90px;
     box-shadow: 0 0 5px #888888;
 }
 
@@ -38,6 +38,15 @@ body{
     height: 30px;
 }
 
+.tool > div{
+    font-size: 25px;
+}
+
 .tool:hover{
     background-color: dimgray;
+}
+
+.tools{
+    display: flex;
+    flex-wrap: wrap;
 }
