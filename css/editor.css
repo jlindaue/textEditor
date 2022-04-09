@@ -1,0 +1,43 @@
+
+body{
+    margin: 0;
+}
+
+.editor{
+    width: 90vw;
+    position: fixed;
+    top: 10vh;
+    left: 5vw;
+    box-shadow: 0 0 5px #888888;
+}
+
+.tools{
+    width: 100%;
+    background-color: lightgray;
+    height: 80px;
+    box-shadow: 0 0 5px #888888;
+}
+
+.paper{
+    width: 90%;
+    height: 70vh;
+    top: 150px;
+    left: 5vw;
+    padding: 5% 5%;
+    overflow-y: scroll;
+}
+
+.tool{
+    cursor: pointer;
+    width: 30px;
+    padding: 5px;
+}
+
+.tool > img{
+    width: 30px;
+    height: 30px;
+}
+
+.tool:hover{
+    background-color: dimgray;
+}
