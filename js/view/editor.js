@@ -15,6 +15,8 @@ function insertElement(newNode){
 }
 
 function addPicture(){
+    //TODO popup/dragndrop/create with canvas
+    //TODO onclick option to delete
     const picture = document.createElement("img");
     picture.src = "https://d32-a.sdn.cz/d_32/c_static_QR_Q/rZ59K/media/img/logo_v2.svg";
     insertElement(picture);
@@ -22,9 +24,19 @@ function addPicture(){
 
 function addTitle(level){
     const title = document.createElement(`h${level}`);
-    title.innerText = "Hello";
+    title.innerText = `Title ${level}`;
     insertElement(title);
     title.focus();
+}
+
+function addAudio(){
+    //TODO popup/dragndrop/record
+    //TODO onclick option to delete
+    const audio = document.createElement("audio");
+    audio.controls = "controls";
+    audio.src = "http://www.woo55.pk/adata/13921/01%20Maps%20-%20(www.SongsLover.pk).mp3";
+    insertElement(audio);
+    audio.focus();
 }
 
 
@@ -140,11 +152,15 @@ const functions = [
         title: "Add level 3 title",
         callback: ()=>addTitle(3),
         icon: "header-3"
+    },
+    {
+        title: "Add audio",
+        callback: addAudio,
+        icon: "audio"
     }
 ];
 
 
-let lastFocused = undefined;
 
 function executeAction(){
     let action = this.getAttribute("action");
@@ -152,7 +168,6 @@ function executeAction(){
     document.execCommand(action, false);
     const paper = document.querySelector(".paper");
     paper.focus();
-    console.log(lastFocused)
     console.log(document.getSelection().anchorNode.parentNode)
 }
 
@@ -197,12 +212,6 @@ export function showEditor(where, content){
     paper.innerHTML = content;
     paper.setAttribute("contenteditable", "true")
     paper.className = "paper";
-
-    //track last visited child
-    paper.childNodes.forEach((child)=>{
-        child.addEventListener("focus", ()=>{lastFocused=child;})
-    });
-
 
     editor.append(tools,paper);
     where.append(editor);
