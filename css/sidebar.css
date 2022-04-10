@@ -96,7 +96,7 @@
     text-transform: uppercase;
 }
 
-.sidebar-items > li:first-letter{
+.sidebar-items li:first-letter{
     font-size: 1.1em;
 }
 
@@ -113,7 +113,14 @@
 
 
 
-.sidebar-items > li:hover{
+.sidebar-items li:not(.list):hover{
     cursor: pointer;
     background-color: #101010;
+}
+
+
+.chapters *{
+    font-size: 12px;
+    padding: 1em;
+    list-style-type: none;
 }
