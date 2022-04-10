@@ -14,15 +14,12 @@ body{
 .tools{
     width: 100%;
     background-color: lightgray;
-    height: 90px;
     box-shadow: 0 0 5px #888888;
 }
 
 .paper{
     width: 90%;
     height: 70vh;
-    top: 150px;
-    left: 5vw;
     padding: 5% 5%;
     overflow-y: scroll;
 }
@@ -50,3 +47,13 @@ body{
     display: flex;
     flex-wrap: wrap;
 }
+
+
+
+
+
+
+
+
+
+.paper h1:before{content: attr(id)}

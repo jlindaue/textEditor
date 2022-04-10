@@ -14,6 +14,24 @@ function insertElement(newNode){
     currentNode.parentNode.insertBefore(newNode, currentNode.nextSibling);
 }
 
+
+export function updateTitles(){
+    const sidebarChapters = document.querySelector(".sidebar .chapters")
+    sidebarChapters.innerHTML = "";
+    document.querySelectorAll(".paper h1").forEach((h, i)=>{
+        h.id = `${i+1}. `;
+        const titleLi = document.createElement("li");
+        titleLi.innerText = h.id + h.innerText;
+        titleLi.addEventListener("click", ()=>{
+            document.querySelector("#sidebarCheckbox").checked = false;
+            document.querySelector(".paper").focus();
+            h.focus();
+        })
+        sidebarChapters.append(titleLi);
+    })
+}
+
+
 function addPicture(){
     //TODO popup/dragndrop/create with canvas
     //TODO onclick option to delete
@@ -27,6 +45,7 @@ function addTitle(level){
     title.innerText = `Title ${level}`;
     insertElement(title);
     title.focus();
+    updateTitles();
 }
 
 function addAudio(){
@@ -215,4 +234,8 @@ export function showEditor(where, content){
 
     editor.append(tools,paper);
     where.append(editor);
+
+    updateTitles();
+
+
 }
