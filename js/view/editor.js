@@ -1,3 +1,6 @@
+import {showCanvasEditor} from "../pictureHandler.js"
+import {showAudioPopup} from "../recordHandler.js"
+
 function getCurrentNode(){
     const paper = document.querySelector(".paper");
     paper.focus();
@@ -32,13 +35,32 @@ export function updateTitles(){
 }
 
 
+function createMediaWrapper(media) {
+    const mediaWrapper = document.createElement("div");
+    mediaWrapper.className = "mediaWrapper";
+
+    const closeButton = document.createElement("div");
+    closeButton.innerHTML = `<div></div><div></div>`
+    closeButton.classList.add("closeButton")
+    closeButton.classList.add("deleteMedia")
+    closeButton.addEventListener("click", ()=>{
+        mediaWrapper.parentNode.removeChild(mediaWrapper);
+    })
+
+    mediaWrapper.append(closeButton,media)
+    return mediaWrapper;
+}
+
 function addPicture(){
     //TODO popup/dragndrop/create with canvas
     //TODO onclick option to delete
     const picture = document.createElement("img");
-    picture.src = "https://d32-a.sdn.cz/d_32/c_static_QR_Q/rZ59K/media/img/logo_v2.svg";
-    insertElement(picture);
+    showCanvasEditor(picture);
+    //picture.src = "https://d32-a.sdn.cz/d_32/c_static_QR_Q/rZ59K/media/img/logo_v2.svg";
+    insertElement(createMediaWrapper(picture));
 }
+
+
 
 function addTitle(level){
     const title = document.createElement(`h${level}`);
@@ -49,12 +71,15 @@ function addTitle(level){
 }
 
 function addAudio(){
+
+
     //TODO popup/dragndrop/record
     //TODO onclick option to delete
     const audio = document.createElement("audio");
     audio.controls = "controls";
-    audio.src = "http://www.woo55.pk/adata/13921/01%20Maps%20-%20(www.SongsLover.pk).mp3";
-    insertElement(audio);
+    showAudioPopup(audio);
+    //audio.src = "http://www.woo55.pk/adata/13921/01%20Maps%20-%20(www.SongsLover.pk).mp3";
+    insertElement(createMediaWrapper(audio));
     audio.focus();
 }
 
@@ -219,9 +244,42 @@ function showTools(toolsBox){
     });
 }
 
+function pasteEvent(e) {
+    e.preventDefault();
+
+    let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+    document.execCommand('insertHTML', false, text);
+}
+
+function createEditableSwitch(paper){
+    const editable = document.createElement("div");
+    editable.className = "editable"
+    const toggle = document.createElement("input");
+    toggle.type = "checkbox"
+    toggle.id = "custom-checkbox-input"
+    toggle.setAttribute("checked", true);
+    //toggle.removeAttribute("checked")
+    const toggleLabel = document.createElement("label");
+    toggleLabel.setAttribute("for", "custom-checkbox-input");
+    toggleLabel.id = "custom-checkbox";
+    const editableText = document.createElement("div");
+    editableText.innerText = "Editable "
+    editable.append(editableText, toggle, toggleLabel)
+    toggle.addEventListener("change", (e)=>{
+        console.log(e)
+        if (toggle.value === true){
+            paper.setAttribute("contenteditable", "true")
+        }else{
+            paper.setAttribute("contenteditable", "false")
+        }
+    })
+    return editable;
+}
+
 export function showEditor(where, content){
     const editor = document.createElement("div");
     editor.className = "editor";
+
 
     const tools = document.createElement("div");
     showTools(tools);
@@ -232,8 +290,23 @@ export function showEditor(where, content){
     paper.setAttribute("contenteditable", "true")
     paper.className = "paper";
 
+    paper.addEventListener("keydown", (e)=>{
+        if (e.code === "Enter"){
+            if(window.getSelection().anchorNode.parentNode.tagName === 'LI') return;
+            document.execCommand('formatBlock', false, 'p');
+        }
+    })
+
+    paper.addEventListener("paste", (e)=>{
+        e.preventDefault();
+        let text = e.clipboardData.getData('text/plain');
+        document.execCommand('insertHTML', false, text);
+    })
+
     editor.append(tools,paper);
     where.append(editor);
+
+    where.append(createEditableSwitch(paper));
 
     updateTitles();
 

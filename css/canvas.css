@@ -1,0 +1,32 @@
+.canvas{
+    border: 1px solid black;
+    overflow: hidden;
+    background-color: white;
+    /*width: 50vw;*/
+}
+
+.canvasControls > *{
+    height: 30px;
+}
+
+.canvasControls{
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.doneButton{
+    margin-left: 50px;
+}
+
+
+.greenButton, .fileInput::file-selector-button{
+    background-color: lightseagreen;
+    font-size: 1em;
+    border: none;
+    margin-left: 50px;
+    cursor: pointer;
+    color: white;
+    height: 30px;
+}
+

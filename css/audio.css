@@ -1,0 +1,42 @@
+.record{
+    height: 40px;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    border: 2px solid red;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+}
+
+.record.recording{
+    background-color: red;
+    color: white;
+}
+
+.record:not(.recording):hover{
+    background-color: #f0c0c0;
+}
+
+.record div{
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.record.recording div{
+    background-color: white;
+}
+
+.record.recording:hover{
+    background-color: #f05050;
+}
+
+.audioInputs{
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}

@@ -13,7 +13,7 @@ body{
 
 .tools{
     width: 100%;
-    background-color: lightgray;
+    background-color: lightseagreen;
     box-shadow: 0 0 5px #888888;
 }
 
@@ -50,6 +50,30 @@ body{
 
 
 
+.paper > audio:hover:before, .paper > img:hover:before{
+
+}
+
+.mediaWrapper{
+    position: relative;
+}
+
+.closeButton.deleteMedia{
+    right: -10px;
+    top: -10px;
+    width: 20px;
+    height: 20px;
+}
+.closeButton.deleteMedia div{
+    width:20px;
+    height: 4px;
+    top: 8px;
+}
+
+.mediaWrapper:not(:hover) > .closeButton{
+    display: none;
+}
+
 
 
 
@@ -57,3 +81,56 @@ body{
 
 
 .paper h1:before{content: attr(id)}
+
+
+
+
+
+
+.editable{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+
+
+#custom-checkbox {
+    overflow: hidden;
+    width: 60px;
+    height: 30px;
+    border-radius: 30px;
+    background: lightblue;
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+#custom-checkbox::before {
+    position: absolute;
+    content: "";
+    display:block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: red;
+    left: 0;
+    transition: all 0.2s ease;
+}
+
+#custom-checkbox-input {
+    display: none;
+}
+
+#custom-checkbox-input:checked + #custom-checkbox::before {
+    left: 100%;
+    transform: translateX(-100%);
+    background: green;
+}
+
+
+.editable{
+    top: 10px;
+    right: 10px;
+    position: absolute;
+}
