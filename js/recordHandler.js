@@ -1,3 +1,4 @@
+import {saveBlob} from "./persist.js";
 
 
 class AudioEditor{
@@ -33,6 +34,7 @@ class AudioEditor{
         doneButton.addEventListener("click", ()=>{
             //finalize and close
             this.parent.parentNode.parentNode.removeChild(this.parent.parentNode);
+            saveBlob(this.audio.src, "mp3");
             this.resultDestination.src = this.audio.src;
         })
         return doneButton;

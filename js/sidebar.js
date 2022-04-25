@@ -3,7 +3,8 @@ export function setSidebarItems(items){
     sidebar.innerHTML = "";
     items.forEach((item)=> {
         const li = document.createElement("li");
-        li.textContent = item;
+        li.textContent = item[0];
+        li.id = item[1];
         sidebar.append(li);
     })
     addChaptersItem()

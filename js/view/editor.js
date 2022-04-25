@@ -1,5 +1,6 @@
 import {showCanvasEditor} from "../pictureHandler.js"
 import {showAudioPopup} from "../recordHandler.js"
+import {registerDocumentActions, saveChanges} from "../persist.js"
 
 function getCurrentNode(){
     const paper = document.querySelector(".paper");
@@ -168,16 +169,6 @@ const functions = [
         icon: "remove-format"
     },
     {
-        title: "Create Link",
-        action: "createLink",
-        icon: "add-link"
-    },
-    {
-        title: "Delete link",
-        action: "unlink",
-        icon: "delete-link"
-    },
-    {
         title: "Add picture",
         callback: addPicture,
         icon: "picture--v1"
@@ -251,7 +242,7 @@ function pasteEvent(e) {
     document.execCommand('insertHTML', false, text);
 }
 
-function createEditableSwitch(paper){
+function createEditableSwitch(paper, tools){
     const editable = document.createElement("div");
     editable.className = "editable"
     const toggle = document.createElement("input");
@@ -263,20 +254,21 @@ function createEditableSwitch(paper){
     toggleLabel.setAttribute("for", "custom-checkbox-input");
     toggleLabel.id = "custom-checkbox";
     const editableText = document.createElement("div");
-    editableText.innerText = "Editable "
+    editableText.innerText = "Allow editing"
     editable.append(editableText, toggle, toggleLabel)
     toggle.addEventListener("change", (e)=>{
-        console.log(e)
-        if (toggle.value === true){
+        if (toggle.checked === true){
+            tools.style.display = "flex";
             paper.setAttribute("contenteditable", "true")
         }else{
+            tools.style.display = "none";
             paper.setAttribute("contenteditable", "false")
         }
     })
     return editable;
 }
 
-export function showEditor(where, content){
+export function showEditor(where, content) {
     const editor = document.createElement("div");
     editor.className = "editor";
 
@@ -286,29 +278,30 @@ export function showEditor(where, content){
     tools.className = "tools";
 
     const paper = document.createElement("div");
-    paper.innerHTML = content;
+    //paper.innerHTML = content;
+
     paper.setAttribute("contenteditable", "true")
     paper.className = "paper";
 
-    paper.addEventListener("keydown", (e)=>{
-        if (e.code === "Enter"){
-            if(window.getSelection().anchorNode.parentNode.tagName === 'LI') return;
+    paper.addEventListener("keydown", (e) => {
+        if (e.code === "Enter") {
+            if (window.getSelection().anchorNode.parentNode.tagName === 'LI') return;
             document.execCommand('formatBlock', false, 'p');
         }
     })
 
-    paper.addEventListener("paste", (e)=>{
+    paper.addEventListener("paste", (e) => {
         e.preventDefault();
         let text = e.clipboardData.getData('text/plain');
         document.execCommand('insertHTML', false, text);
     })
 
-    editor.append(tools,paper);
+    editor.append(tools, paper);
     where.append(editor);
 
-    where.append(createEditableSwitch(paper));
+    where.append(createEditableSwitch(paper, tools));
 
     updateTitles();
-
-
+    registerDocumentActions(paper);
 }
+

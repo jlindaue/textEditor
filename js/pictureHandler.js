@@ -1,3 +1,4 @@
+import {saveBlob} from "./persist.js";
 
 const CANVAS_WIDTH = "600";
 const CANVAS_HEIGHT = "400";
@@ -61,6 +62,7 @@ class ImageEditor{
         doneButton.addEventListener("click", ()=>{
             //finalize and close
             document.body.removeChild(this.cx.canvas.parentNode.parentNode);
+            saveBlob(this.cx.canvas.toDataURL(), "png");
             this.resultDestination.src = this.cx.canvas.toDataURL();
         })
 

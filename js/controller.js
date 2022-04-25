@@ -5,6 +5,6 @@ import {showEditor} from "./view/editor.js"
 const wrapper = document.querySelector(".wrapper");
 let content = "<h1 id='ID'>Hello world</h1> This is my editor";
 
-setSidebarItems(["Document 1", "Item 2","Item 3", "Item 4"]);
+setSidebarItems([["Create new document", "createDocument"], ["Load document", "loadDocument"]]);
 showEditor(wrapper, content);
 

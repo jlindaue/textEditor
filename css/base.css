@@ -54,3 +54,33 @@
 .closeButton div:last-child{
     transform: rotate(-45deg);
 }
+
+
+.waiting{
+    position: fixed;
+    top: 5px;
+    width: 20vw;
+    left: 40vw;
+    background-color: rgba(32,178,170,0.3);
+
+    border-radius: 5px;
+    padding: 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.waiting div{
+    height: 20px;
+    width: 20px;
+    border: 5px solid gray;
+    border-top: 5px solid lightseagreen;
+    border-radius: 20px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
