@@ -1,4 +1,4 @@
-import {saveBlob} from "./persist.js";
+import {saveBlob, wait} from "./persist.js";
 
 
 class AudioEditor{
@@ -31,11 +31,15 @@ class AudioEditor{
         doneButton.className = "doneButton"
         doneButton.classList.add("greenButton")
         doneButton.value = "Use this audio"
-        doneButton.addEventListener("click", ()=>{
+        doneButton.addEventListener("click", async()=>{
             //finalize and close
             this.parent.parentNode.parentNode.removeChild(this.parent.parentNode);
-            saveBlob(this.audio.src, "mp3");
             this.resultDestination.src = this.audio.src;
+            if (this.audio.src === ""){
+                this.resultDestination.parentNode.parentNode.removeChild(this.resultDestination.parentNode);
+                return;
+            }
+            await wait(saveBlob, "Saving", this.audio.src, "mp3", this.resultDestination);
         })
         return doneButton;
     }
@@ -123,6 +127,7 @@ export function showAudioPopup(resultDestination){
     closeButton.className = "closeButton";
     closeButton.addEventListener("click", ()=>{
         document.body.removeChild(popupWrapper);
+        resultDestination.parentNode.parentNode.removeChild(resultDestination.parentNode);
     })
 
     popup.innerHTML = `<h1>Upload your audio or record it here</h1>`

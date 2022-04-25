@@ -1,4 +1,4 @@
-import {saveBlob} from "./persist.js";
+import {saveBlob, wait} from "./persist.js";
 
 const CANVAS_WIDTH = "600";
 const CANVAS_HEIGHT = "400";
@@ -59,11 +59,11 @@ class ImageEditor{
         doneButton.className = "doneButton"
         doneButton.classList.add("greenButton")
         doneButton.value = "Use this picture"
-        doneButton.addEventListener("click", ()=>{
+        doneButton.addEventListener("click", async()=>{
             //finalize and close
             document.body.removeChild(this.cx.canvas.parentNode.parentNode);
-            saveBlob(this.cx.canvas.toDataURL(), "png");
             this.resultDestination.src = this.cx.canvas.toDataURL();
+            await wait(saveBlob, "Saving", this.cx.canvas.toDataURL(), "png", this.resultDestination);
         })
 
         this.controls.append(doneButton)
@@ -152,6 +152,7 @@ export function showCanvasEditor(resultDestination){
     closeButton.className = "closeButton";
     closeButton.addEventListener("click", ()=>{
         document.body.removeChild(popupWrapper);
+        resultDestination.parentNode.parentNode.removeChild(resultDestination.parentNode);
     })
 
     popup.innerHTML = `<h1>Upload your picture or create it here</h1>`

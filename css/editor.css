@@ -74,6 +74,10 @@ body{
     display: none;
 }
 
+.paper[contenteditable="false"] .closeButton{
+    display: none;
+}
+
 
 
 
