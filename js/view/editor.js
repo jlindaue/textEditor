@@ -63,11 +63,8 @@ function createMediaWrapper(media) {
 }
 
 function addPicture(){
-    //TODO popup/dragndrop/create with canvas
-    //TODO onclick option to delete
     const picture = document.createElement("img");
     showCanvasEditor(picture);
-    //picture.src = "https://d32-a.sdn.cz/d_32/c_static_QR_Q/rZ59K/media/img/logo_v2.svg";
     insertElement(createMediaWrapper(picture));
 }
 
@@ -82,10 +79,6 @@ function addTitle(level){
 }
 
 function addAudio(){
-
-
-    //TODO popup/dragndrop/record
-    //TODO onclick option to delete
     const audio = document.createElement("audio");
     audio.controls = "controls";
     showAudioPopup(audio);
@@ -244,13 +237,6 @@ function showTools(toolsBox){
     });
 }
 
-function pasteEvent(e) {
-    e.preventDefault();
-
-    let text = (e.originalEvent || e).clipboardData.getData('text/plain');
-    document.execCommand('insertHTML', false, text);
-}
-
 function createEditableSwitch(paper, tools){
     const editable = document.createElement("div");
     editable.className = "editable"
@@ -292,13 +278,13 @@ export function showEditor(where, content) {
     paper.setAttribute("contenteditable", "true")
     paper.className = "paper";
 
-    paper.addEventListener("keydown", (e) => {
+    /*paper.addEventListener("keydown", (e) => {
         if (e.code === "Enter") {
             if (window.getSelection().anchorNode.parentNode.tagName === 'LI') return;
             //TODO
             document.execCommand('formatBlock', false, 'p');
         }
-    })
+    })*/
 
     paper.addEventListener("paste", (e) => {
         e.preventDefault();

@@ -105,6 +105,7 @@ export async function loadDocument(paper){
             mediaWrapper.parentNode.removeChild(mediaWrapper);
         })
     })
+    updateTitles();
 }
 
 
