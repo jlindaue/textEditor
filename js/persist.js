@@ -85,7 +85,6 @@ export async function loadDocument(paper){
             const file = await entry.getFile();
             paper.innerHTML = await file.text();
             mainHTML = file;
-            console.log(paper.innerHTML)
         }else{
             mediaCount+=1;
             if (entry.name.endsWith(".mp3")){
@@ -98,6 +97,13 @@ export async function loadDocument(paper){
 
     paper.querySelectorAll("audio").forEach((audio)=>{
         audio.src = records.get(audio.getAttribute("filename"));
+    })
+
+    paper.querySelectorAll(".deleteMedia").forEach((closeButton)=>{
+        closeButton.addEventListener("click", ()=>{
+            const mediaWrapper = closeButton.parentNode;
+            mediaWrapper.parentNode.removeChild(mediaWrapper);
+        })
     })
 }
 
@@ -121,7 +127,7 @@ export async function wait(f, text, ...args){
 export function registerDocumentActions(paper){
     const createDocumentButton = document.getElementById('createDocument');
     createDocumentButton.addEventListener('click', async () => {
-        paper.innerHTML = `<h1>Title</h1>`
+        paper.innerHTML = ""
         updateTitles();
         await wait(createNewDocument, "Creating and saving", paper.innerHTML);
     });
@@ -129,11 +135,11 @@ export function registerDocumentActions(paper){
     loadDocumentButton.addEventListener('click', async () => {
         updateTitles();
         await wait(loadDocument, "Loading", paper);
+        paper.lastChild.scrollIntoView(true);
     });
     document.addEventListener("keydown", async (e)=>{
         //ctrl+s
         if (e.ctrlKey && e.code === "KeyS"){
-            console.log(e);
             e.preventDefault();
             await wait(saveChanges, "Saving", paper.innerHTML);
         }

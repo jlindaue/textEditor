@@ -9,6 +9,13 @@ function getCurrentNode(){
     if (currentNode === paper){
         currentNode = document.getSelection().anchorNode;
     }
+    if (currentNode.className === "editor"){
+        const p = document.createElement("p")
+        paper.append(p);
+        return p;
+    }
+    console.log(currentNode)
+    console.log(document.getSelection())
     return currentNode;
 }
 
@@ -29,7 +36,10 @@ export function updateTitles(){
         titleLi.addEventListener("click", ()=>{
             document.querySelector("#sidebarCheckbox").checked = false;
             document.querySelector(".paper").focus();
+            h.parentNode.setAttribute("contenteditable", "false");
             h.focus();
+            h.scrollIntoView(true);
+            h.parentNode.setAttribute("contenteditable", "true");
         })
         sidebarChapters.append(titleLi);
     })
@@ -199,7 +209,6 @@ const functions = [
 
 function executeAction(){
     let action = this.getAttribute("action");
-    console.log(action);
     document.execCommand(action, false);
     const paper = document.querySelector(".paper");
     paper.focus();
@@ -286,6 +295,7 @@ export function showEditor(where, content) {
     paper.addEventListener("keydown", (e) => {
         if (e.code === "Enter") {
             if (window.getSelection().anchorNode.parentNode.tagName === 'LI') return;
+            //TODO
             document.execCommand('formatBlock', false, 'p');
         }
     })
