@@ -8,10 +8,8 @@ class ImageEditor{
         this.resultDestination = resultDestination;
         this.canvas = document.createElement("canvas");
         this.canvas.className = "canvas";
-        this.canvas.setAttribute("width", `${CANVAS_WIDTH}px`);
-        this.canvas.setAttribute("height", `${CANVAS_HEIGHT}px`);
-
-        this.action = "makeLine"
+        this.canvas.setAttribute("width", `${CANVAS_WIDTH}`);
+        this.canvas.setAttribute("height", `${CANVAS_HEIGHT}`);
 
         this.cx = this.canvas.getContext("2d");
 
@@ -20,15 +18,13 @@ class ImageEditor{
         this.mousePosition = [-1,-1];
         this.createControls();
 
-        this.imageInput = this.imageInput();
+        this.imageInputButton = this.imageInput();
 
         this.canvas.addEventListener("mousemove", this);
-        //this.controls.addEventListener("mousemove", this);
-
     }
 
     createControls(){
-        this.controls = document.createElement("div");
+        this.controls = document.createElement("section");
         this.controls.className = "canvasControls";
 
         const colors = document.createElement("input");
@@ -39,7 +35,6 @@ class ImageEditor{
             this.cx.strokeStyle = colors.value;
             this.mousePosition = [-1,-1];
         });
-        //this.controls.innerHTML += `<label>Choose a color: </label>`
         this.controls.append(colors)
 
         const lineWidth = document.createElement("select");
@@ -50,7 +45,6 @@ class ImageEditor{
         lineWidth.addEventListener("change", ()=>{
             this.cx.lineWidth = lineWidth.value;
         });
-        //this.controls.innerHTML += `<label>Set line width: </label>`
         this.controls.append(lineWidth)
 
 
@@ -70,10 +64,11 @@ class ImageEditor{
 
     }
 
+    //show selected image in canvas
     drawImage(file){
         if (file === undefined) return;
+        if (!(file.type.startsWith("image/"))) return;
         let url = URL.createObjectURL(file);
-        console.log(url)
         const image = new Image();
         image.src = url;
         image.addEventListener("load", ()=>{
@@ -96,6 +91,7 @@ class ImageEditor{
         });
     }
 
+    //drag and drop/form
     imageInput(){
         let input = document.createElement("input");
         input.type = "file";
@@ -120,12 +116,6 @@ class ImageEditor{
             this.makeLine(e);
             this.mousePosition = [e.offsetX, e.offsetY];
         }
-        /*
-        switch (e.type){
-            case "mousedown": this._makeLine(e);break;
-            case "mousemove": this._logPosition(e);break;
-            case "click": this._showConfirm(e);break;
-        }*/
     }
 
 
@@ -133,7 +123,6 @@ class ImageEditor{
         if (e.buttons % 2 !== 1 || this.mousePosition[0] === -1){
             return;
         }
-        //console.log(this.mousePosition)
         this.cx.beginPath();
         this.cx.moveTo(...this.mousePosition);
         this.cx.lineTo(e.offsetX, e.offsetY);
@@ -142,9 +131,9 @@ class ImageEditor{
 }
 
 export function showCanvasEditor(resultDestination){
-    const popupWrapper = document.createElement("div");
+    const popupWrapper = document.createElement("section");
     popupWrapper.className = "popupWrapper";
-    const popup = document.createElement("div");
+    const popup = document.createElement("section");
     popup.className = "popup";
 
     const closeButton = document.createElement("div");
@@ -160,7 +149,7 @@ export function showCanvasEditor(resultDestination){
     let image = new ImageEditor(resultDestination);
 
 
-    popup.append(image.imageInput, image.canvas, image.controls, closeButton);
+    popup.append(image.imageInputButton, image.canvas, image.controls, closeButton);
     popupWrapper.append(popup);
     document.body.append(popupWrapper)
 }

@@ -56,7 +56,7 @@
 }
 
 
-.waiting{
+.waiting, .warning{
     position: fixed;
     top: 5px;
     width: 20vw;
@@ -69,6 +69,11 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
+}
+
+.warning{
+    background-color: #f07070;
+    text-align: center;
 }
 
 .waiting div{

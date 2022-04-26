@@ -14,8 +14,6 @@ class AudioEditor{
         this.createRecordingInterface();
         this.doneButton = this.createDoneButton();
 
-
-
         this.chunks = [];
 
         const div = document.createElement("div")
@@ -44,9 +42,9 @@ class AudioEditor{
         return doneButton;
     }
 
-
     showAudio(file){
         if (file === undefined) return;
+        if (!(file.type.startsWith("audio/"))) return;
         let url = URL.createObjectURL(file);
         this.audio.src = url;
     }
@@ -117,9 +115,9 @@ class AudioEditor{
 
 
 export function showAudioPopup(resultDestination){
-    const popupWrapper = document.createElement("div");
+    const popupWrapper = document.createElement("section");
     popupWrapper.className = "popupWrapper";
-    const popup = document.createElement("div");
+    const popup = document.createElement("section");
     popup.className = "popup";
 
     const closeButton = document.createElement("div");
@@ -132,7 +130,7 @@ export function showAudioPopup(resultDestination){
 
     popup.innerHTML = `<h1>Upload your audio or record it here</h1>`
 
-    let audio = new AudioEditor(resultDestination, popup);
+    new AudioEditor(resultDestination, popup);
 
     popup.append(closeButton);
     popupWrapper.append(popup);

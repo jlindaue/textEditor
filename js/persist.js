@@ -1,4 +1,7 @@
+// functions responsible for saving and retrieving document from filesystem
+
 import {updateTitles} from "./view/editor.js";
+
 
 let documentDirectory = undefined;
 let mainHTML = undefined;
@@ -19,7 +22,6 @@ export async function createNewDocument(){
     documentDirectory = await window.showDirectoryPicker();
     if (documentDirectory === undefined) return;
     mainHTML = await documentDirectory.getFileHandle('main.html', { create: true });
-    //blobs = new Map();
     await writeFile(mainHTML, html);
     mediaCount = 0;
 }
@@ -36,18 +38,6 @@ export async function saveChanges(){
 
 
 export async function saveBlob(url, type, targetElement){
-    if (documentDirectory === undefined) {
-        try{
-            await createNewDocument();
-        }catch (e){
-            targetElement.parentNode.parentNode.removeChild(targetElement.parentNode)
-        }
-
-    }
-    if (documentDirectory === undefined){
-        targetElement.parentNode.parentNode.removeChild(targetElement.parentNode)
-        return;
-    }
     mediaCount += 1;
     const blobFile = await documentDirectory.getFileHandle(`${mediaCount}.${type}`, { create: true });
     // Create a FileSystemWritableFileStream to write to.
@@ -57,8 +47,7 @@ export async function saveBlob(url, type, targetElement){
     // Stream the response into the file.
     await response.body.pipeTo(writable);
     // pipeTo() closes the destination pipe by default, no need to close it.
-    //blobs.set(filename, blobFile);
-    targetElement.setAttribute("filename", `${mediaCount}.${type}`)
+    targetElement.setAttribute("id", `${mediaCount}.${type}`)
     await saveChanges();
 }
 
@@ -67,6 +56,7 @@ export async function deleteBlob(filename){
     mediaCount -= 1;
 }
 
+
 export async function loadDocument(paper){
     const oldDoc = documentDirectory;
     documentDirectory = await window.showDirectoryPicker();
@@ -74,8 +64,6 @@ export async function loadDocument(paper){
         documentDirectory = oldDoc;
         return;
     }
-
-    const audioFiles = document.querySelectorAll(".paper audio");
 
     mediaCount = 0
     const records = new Map()
@@ -96,7 +84,7 @@ export async function loadDocument(paper){
     }
 
     paper.querySelectorAll("audio").forEach((audio)=>{
-        audio.src = records.get(audio.getAttribute("filename"));
+        audio.src = records.get(audio.getAttribute("id"));
     })
 
     paper.querySelectorAll(".deleteMedia").forEach((closeButton)=>{
@@ -108,7 +96,7 @@ export async function loadDocument(paper){
     updateTitles();
 }
 
-
+//function wrapper - calls function and displays loading div
 export async function wait(f, text, ...args){
     const wrapper  = document.querySelector(".wrapper")
     let waiting = document.createElement("div");
@@ -121,22 +109,48 @@ export async function wait(f, text, ...args){
         console.log(e);
     }
     wrapper.removeChild(waiting)
-
 }
 
+// if the user havent specified save location yet, show directory picker and warning
+export async function saveWarning(){
+    if (documentDirectory !== undefined){
+        return false;
+    }
+    try{
+        await createNewDocument();
+    }catch (e){
+        console.log(e);
+    }
+    if (documentDirectory !== undefined){
+        return false;
+    }
 
+    const wrapper  = document.querySelector(".wrapper")
+    let warning = document.createElement("div");
+    warning.className = "warning";
+    warning.innerHTML = "You need to save this document first to be able to add media";
+    wrapper.append(warning);
+    setTimeout(()=>{
+        wrapper.removeChild(warning);
+    },3000)
+    return true;
+}
+
+//user actions that trigger document save/retrieve
 export function registerDocumentActions(paper){
     const createDocumentButton = document.getElementById('createDocument');
     createDocumentButton.addEventListener('click', async () => {
         paper.innerHTML = ""
         updateTitles();
         await wait(createNewDocument, "Creating and saving", paper.innerHTML);
+        document.querySelector("#sidebarCheckbox").checked = false;
     });
     const loadDocumentButton = document.getElementById('loadDocument');
     loadDocumentButton.addEventListener('click', async () => {
         updateTitles();
         await wait(loadDocument, "Loading", paper);
         paper.lastChild.scrollIntoView(true);
+        document.querySelector("#sidebarCheckbox").checked = false;
     });
     document.addEventListener("keydown", async (e)=>{
         //ctrl+s

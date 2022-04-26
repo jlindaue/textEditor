@@ -1,7 +1,9 @@
 import {showCanvasEditor} from "../pictureHandler.js"
 import {showAudioPopup} from "../recordHandler.js"
-import {registerDocumentActions, saveChanges} from "../persist.js"
+import {registerDocumentActions, saveChanges, saveWarning} from "../persist.js"
 
+
+//determine current cursor position - where to insert element into paper
 function getCurrentNode(){
     const paper = document.querySelector(".paper");
     paper.focus();
@@ -19,33 +21,35 @@ function getCurrentNode(){
     return currentNode;
 }
 
+//insert element into paper
 function insertElement(newNode){
     const currentNode = getCurrentNode();
     console.log(currentNode)
     currentNode.parentNode.insertBefore(newNode, currentNode.nextSibling);
 }
 
-
+//update numbering of h1 titles and at them to sidebar
 export function updateTitles(){
     const sidebarChapters = document.querySelector(".sidebar .chapters")
     sidebarChapters.innerHTML = "";
     document.querySelectorAll(".paper h1").forEach((h, i)=>{
-        h.id = `${i+1}. `;
+        h.id = `${i+1}.`;
         const titleLi = document.createElement("li");
-        titleLi.innerText = h.id + h.innerText;
+        titleLi.innerText = h.id + " " + h.innerText;
         titleLi.addEventListener("click", ()=>{
             document.querySelector("#sidebarCheckbox").checked = false;
             document.querySelector(".paper").focus();
+            const wasEditable = h.parentNode.getAttribute("contenteditable");
             h.parentNode.setAttribute("contenteditable", "false");
             h.focus();
             h.scrollIntoView(true);
-            h.parentNode.setAttribute("contenteditable", "true");
+            h.parentNode.setAttribute("contenteditable", wasEditable);
         })
         sidebarChapters.append(titleLi);
     })
 }
 
-
+//each media is wrapped - delete button is added to it
 function createMediaWrapper(media) {
     const mediaWrapper = document.createElement("div");
     mediaWrapper.className = "mediaWrapper";
@@ -62,13 +66,15 @@ function createMediaWrapper(media) {
     return mediaWrapper;
 }
 
-function addPicture(){
+
+
+async function addPicture(){
+    if (await saveWarning() === true) return;
     const picture = document.createElement("img");
+    picture.alt = "Loading image";
     showCanvasEditor(picture);
     insertElement(createMediaWrapper(picture));
 }
-
-
 
 function addTitle(level){
     const title = document.createElement(`h${level}`);
@@ -78,18 +84,16 @@ function addTitle(level){
     updateTitles();
 }
 
-function addAudio(){
+async function addAudio(){
+    if (await saveWarning() === true) return;
     const audio = document.createElement("audio");
     audio.controls = "controls";
     showAudioPopup(audio);
-    //audio.src = "http://www.woo55.pk/adata/13921/01%20Maps%20-%20(www.SongsLover.pk).mp3";
     insertElement(createMediaWrapper(audio));
     audio.focus();
 }
 
-
-
-
+//document actions displayed in tool section
 const functions = [
     {
         title: "Bold",
@@ -142,11 +146,6 @@ const functions = [
         icon: "bulleted-list"
     },
     {
-        title: "Italic",
-        action: "italic",
-        icon: "italic"
-    },
-    {
         title: "Outdent",
         action: "outdent",
         icon: "outdent"
@@ -173,42 +172,46 @@ const functions = [
     },
     {
         title: "Add picture",
+        action: "addPicture",
         callback: addPicture,
         icon: "picture--v1"
     },
     {
         title: "Add level 1 title",
+        action: "title1",
         callback: ()=>addTitle(1),
         icon: "header-1"
     },
     {
         title: "Add level 2 title",
+        action: "title2",
         callback: ()=>addTitle(2),
         icon: "header-2"
     },
     {
         title: "Add level 3 title",
+        action: "title3",
         callback: ()=>addTitle(3),
         icon: "header-3"
     },
     {
         title: "Add audio",
+        action: "addAudio",
         callback: addAudio,
         icon: "audio"
     }
 ];
 
 
-
+//action executed natively
 function executeAction(){
-    let action = this.getAttribute("action");
+    let action = this.getAttribute("id");
     document.execCommand(action, false);
     const paper = document.querySelector(".paper");
     paper.focus();
-    console.log(document.getSelection().anchorNode.parentNode)
 }
 
-
+// create document tools bar above it
 function showTools(toolsBox){
     functions.forEach((func)=>{
         const tool = document.createElement("div");
@@ -221,7 +224,7 @@ function showTools(toolsBox){
             tool.addEventListener("click", executeAction);
         }
         tool.title = func.title;
-        tool.setAttribute("action", func.action);
+        tool.setAttribute("id", func.action);
 
         //add icon
         const icon = document.createElement("img");
@@ -237,14 +240,14 @@ function showTools(toolsBox){
     });
 }
 
+//switch beteen view and contenteditable mode of the document
 function createEditableSwitch(paper, tools){
     const editable = document.createElement("div");
     editable.className = "editable"
     const toggle = document.createElement("input");
     toggle.type = "checkbox"
     toggle.id = "custom-checkbox-input"
-    toggle.setAttribute("checked", true);
-    //toggle.removeAttribute("checked")
+    toggle.setAttribute("checked", "checked");
     const toggleLabel = document.createElement("label");
     toggleLabel.setAttribute("for", "custom-checkbox-input");
     toggleLabel.id = "custom-checkbox";
@@ -263,28 +266,20 @@ function createEditableSwitch(paper, tools){
     return editable;
 }
 
-export function showEditor(where, content) {
+//main function - initialize editor
+export function showEditor(where) {
     const editor = document.createElement("div");
     editor.className = "editor";
 
 
-    const tools = document.createElement("div");
+    const tools = document.createElement("section");
     showTools(tools);
     tools.className = "tools";
 
-    const paper = document.createElement("div");
-    //paper.innerHTML = content;
+    const paper = document.createElement("article");
 
     paper.setAttribute("contenteditable", "true")
     paper.className = "paper";
-
-    /*paper.addEventListener("keydown", (e) => {
-        if (e.code === "Enter") {
-            if (window.getSelection().anchorNode.parentNode.tagName === 'LI') return;
-            //TODO
-            document.execCommand('formatBlock', false, 'p');
-        }
-    })*/
 
     paper.addEventListener("paste", (e) => {
         e.preventDefault();
