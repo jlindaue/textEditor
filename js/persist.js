@@ -1,6 +1,6 @@
 // functions responsible for saving and retrieving document from filesystem
 
-import {updateTitles} from "./view/editor.js";
+import {updateTitles} from "./editor.js";
 
 
 let documentDirectory = undefined;
@@ -128,7 +128,7 @@ export async function saveWarning(){
     const wrapper  = document.querySelector(".wrapper")
     let warning = document.createElement("div");
     warning.className = "warning";
-    warning.innerHTML = "You need to save this document first to be able to add media";
+    warning.innerHTML = "You need to save this document first (Ctrl+S) to be able to add media";
     wrapper.append(warning);
     setTimeout(()=>{
         wrapper.removeChild(warning);

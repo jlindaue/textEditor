@@ -1,5 +1,5 @@
 import {setSidebarItems} from "./sidebar.js"
-import {showEditor} from "./view/editor.js"
+import {showEditor} from "./editor.js"
 
 
 const wrapper = document.querySelector(".wrapper");

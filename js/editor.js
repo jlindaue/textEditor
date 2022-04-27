@@ -1,6 +1,6 @@
-import {showCanvasEditor} from "../pictureHandler.js"
-import {showAudioPopup} from "../recordHandler.js"
-import {registerDocumentActions, saveChanges, saveWarning} from "../persist.js"
+import {showCanvasEditor} from "./pictureHandler.js"
+import {showAudioPopup} from "./recordHandler.js"
+import {registerDocumentActions, saveChanges, saveWarning} from "./persist.js"
 
 
 //determine current cursor position - where to insert element into paper
@@ -240,7 +240,7 @@ function showTools(toolsBox){
     });
 }
 
-//switch beteen view and contenteditable mode of the document
+//switch between view and contenteditable mode of the document
 function createEditableSwitch(paper, tools){
     const editable = document.createElement("div");
     editable.className = "editable"
