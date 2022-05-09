@@ -20,24 +20,24 @@
     z-index: 100;
 }
 
-#sidebarToggle div{
+#sidebarToggle span{
     transition: transform 0.2s;
 }
 
 
-#sidebarCheckbox:not(:checked) ~ #sidebarToggle div:first-child{
+#sidebarCheckbox:not(:checked) ~ #sidebarToggle span:first-child{
     transform: translateY(-12px);
 }
 
-#sidebarCheckbox:not(:checked) ~ #sidebarToggle div:last-child{
+#sidebarCheckbox:not(:checked) ~ #sidebarToggle span:last-child{
     transform: translateY(12px);
 }
 
-#sidebarCheckbox:checked ~ #sidebarToggle div:not(:first-child){
+#sidebarCheckbox:checked ~ #sidebarToggle span:not(:first-child){
     transform: rotate(45deg);
 }
 
-#sidebarCheckbox:checked ~ #sidebarToggle div:first-child{
+#sidebarCheckbox:checked ~ #sidebarToggle span:first-child{
     transform: rotate(-45deg);
 }
 
