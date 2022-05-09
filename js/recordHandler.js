@@ -57,6 +57,9 @@ class AudioEditor{
             let file = input.files[0];
             this.showAudio(file);
         }
+        this.audio.addEventListener("dragover", (e)=>{
+            e.preventDefault();
+        })
         this.audio.addEventListener("drop", (e)=>{
             e.preventDefault();
             let file = e.dataTransfer.files[0];

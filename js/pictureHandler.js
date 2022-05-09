@@ -100,7 +100,9 @@ class ImageEditor{
             let file = input.files[0];
             this.drawImage(file);
         }
-
+        this.canvas.addEventListener("dragover", (e)=> {
+            e.preventDefault();
+        });
         this.canvas.addEventListener("drop", (e)=>{
             e.preventDefault();
             let file = e.dataTransfer.files[0];
