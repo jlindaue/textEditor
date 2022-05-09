@@ -247,7 +247,7 @@ function createEditableSwitch(paper, tools){
     const toggle = document.createElement("input");
     toggle.type = "checkbox"
     toggle.id = "custom-checkbox-input"
-    toggle.setAttribute("checked", "checked");
+    //toggle.setAttribute("checked", "checked");
     const toggleLabel = document.createElement("label");
     toggleLabel.setAttribute("for", "custom-checkbox-input");
     toggleLabel.id = "custom-checkbox";
@@ -275,10 +275,11 @@ export function showEditor(where) {
     const tools = document.createElement("section");
     showTools(tools);
     tools.className = "tools";
+    tools.style.display = "none";
 
     const paper = document.createElement("article");
 
-    paper.setAttribute("contenteditable", "true")
+    //paper.setAttribute("contenteditable", "true")
     paper.className = "paper";
 
     paper.addEventListener("paste", (e) => {

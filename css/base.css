@@ -89,3 +89,22 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+@media only screen and (max-device-width: 600px){
+    .editable{display: none;}
+    .tools{display: none;}
+    .sidebar{width: 80vw;}
+    #sidebarCheckbox:not(:checked) ~ .sidebar{
+        transform: translateX(-80vw);
+    }
+    .sidebar-items > li{font-size: 2em;}
+    .chapters *{font-size: 1em;}
+    #sidebarToggle span{width: 100px;height: 20px;top: 50px;}
+    #sidebarCheckbox:not(:checked) ~ #sidebarToggle span:first-child{
+        transform: translateY(-30px);
+    }
+    #sidebarCheckbox:not(:checked) ~ #sidebarToggle span:last-child{
+        transform: translateY(30px);
+    }
+    .paper{font-size: 2em;}
+}
